@@ -1,30 +1,34 @@
-package org.fasttrackit.countries.country;
+package org.fasttrackit.countries.service.country;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.fasttrackit.countries.exception.ResourceNotFoundException;
+import org.fasttrackit.countries.model.country.Country;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.StreamSupport;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class CountryService {
     private final CountryReader countryReader;
-    private final List<Country> countryList = new ArrayList<>();
+
+    private final CountryRepository countryRepository;
 
     @PostConstruct
     public void init() {
         System.out.println("Post construct in Country Service");
-        countryList.addAll(countryReader.readCountries());
+        List<Country> countries = countryReader.readCountries();
+        countryRepository.saveAll(countries);
     }
 
     public List<Country> getAllCountries() {
-        return countryList;
+        return StreamSupport.stream(countryRepository.findAll().spliterator(), false).toList();
     }
 
     public List<Country> getByContinent(String continent) {
-        return countryList.stream()
+        return getAllCountries().stream()
                 .filter(country -> country.getContinent().equals(continent))
                 .toList();
     }
@@ -33,17 +37,17 @@ public class CountryService {
         return getAllCountries().stream()
                 .filter(country -> country.getId() == id)
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new ResourceNotFoundException("country not found", id));
     }
 
     public Country delete(long id) {
         Country country = getById(id);
-        countryList.remove(country);
+        countryRepository.deleteById(id);
         return country;
     }
 
     public Country add(Country country) {
-        countryList.add(country);
+        countryRepository.save(country);
         return country;
     }
 

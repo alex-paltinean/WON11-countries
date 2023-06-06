@@ -1,5 +1,7 @@
-package org.fasttrackit.countries.country;
+package org.fasttrackit.countries.service.country;
 
+import org.fasttrackit.countries.model.country.Country;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -12,10 +14,16 @@ import java.util.Scanner;
 @Component
 public class CountryReader {
 
+    private final String pathName;
+
+    public CountryReader(@Value("${initial.data}") String pathName) {
+        this.pathName = pathName;
+    }
+
     public List<Country> readCountries() {
         List<Country> countries = new ArrayList<>();
         try {
-            Scanner scanner = new Scanner(new File("src/main/resources/countries.txt"));
+            Scanner scanner = new Scanner(new File(pathName));
             long id = 1;
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
