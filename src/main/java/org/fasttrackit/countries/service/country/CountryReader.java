@@ -1,5 +1,6 @@
 package org.fasttrackit.countries.service.country;
 
+import org.fasttrackit.countries.model.country.City;
 import org.fasttrackit.countries.model.country.Country;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -41,12 +42,13 @@ public class CountryReader {
         Country.CountryBuilder countryBuilder = Country.builder()
                 .id(id)
                 .name(tokens[0])
-                .capital(tokens[1])
+                .capital(new City(tokens[1]))
                 .population(Long.parseLong(tokens[2]))
                 .area(Long.parseLong(tokens[3]))
                 .continent(tokens[4]);
         if (tokens.length == 6) {
-            countryBuilder.neighbours(Arrays.asList(tokens[5].split("~")));
+//            countryBuilder.neighbours(Arrays.asList(tokens[5].split("~")));
+            countryBuilder.neighbours(new ArrayList<>());
         }
         return countryBuilder.build();
     }
