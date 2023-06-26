@@ -54,12 +54,12 @@ public class CountryService {
     }
 
     public Country update(Country country, long id) {
-        Country existingCountry = delete(id);
+        Country existingCountry = getById(id);
         return add(Country.builder()
                 .id(id)
                 .name(existingCountry.getName())
                 .neighbours(existingCountry.getNeighbours())
-                .capital(country.getCapital())
+                .capital(existingCountry.getCapital())
                 .population(country.getPopulation())
                 .area(country.getArea())
                 .continent(existingCountry.getContinent())

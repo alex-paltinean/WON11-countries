@@ -18,7 +18,7 @@ public class Country {
     @Column(name = "country_name")
     private String name;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private City capital;
     @Column
     private long population;
@@ -33,7 +33,7 @@ public class Country {
 //    @ManyToMany(mappedBy = "neighbours")
 //    private List<Country> neighboursOf;
 
-    @OneToMany(mappedBy = "country", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "country", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private List<City> cities;
 
     public Country(long id) {
